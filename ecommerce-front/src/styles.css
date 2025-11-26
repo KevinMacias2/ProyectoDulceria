@@ -1,0 +1,178 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Para componentes con scroll */
+  .scrollable {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  
+  /* Animaciones para hover en cards de productos */
+  .card {
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Colores de marca personalizados */
+  :root {
+    --bs-primary: #0057b8; /* Azul más oscuro para béisbol */
+    --bs-primary-rgb: 0, 87, 184;
+    --bs-secondary: #d9230f; /* Rojo para detalles */
+    --bs-secondary-rgb: 217, 35, 15;
+  }
+  
+  /* Ajustes responsivos */
+  @media (max-width: 768px) {
+    .container {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
+  
+  /* Estilos para botones */
+  .btn-primary {
+    background: linear-gradient(90deg, #6a5acd 0%, #a052be 100%);
+  color: white;
+  border: none;
+  outline: none; 
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #5e4dc9 0%, #9c45ba 100%);
+    background-color: var(--bs-primary);
+  }
+  
+.btn-outline-primary {
+  background: linear-gradient(90deg, #6a5acd 0%, #a052be 100%);
+  color: white;
+  border: none;
+  outline: none; 
+}
+
+.btn-outline-primary:hover {
+  background: linear-gradient(90deg, #5e4dc9 0%, #9c45ba 100%);
+  color: white;
+  border: none; 
+  outline: none;
+}
+
+.btn-outline-primary-vm{
+  background: linear-gradient(90deg, #ff7e5f 0%, #feb47b 100%);
+  color: white;
+  border-radius: 10px;
+  outline: none;
+}
+.btn-outline-primary-vm:hover{
+  background: linear-gradient(90deg, #ff6a3d 0%, #ff9a5b 100%);
+  color: white; 
+  border-radius: 10px;
+  outline: none;
+  transform: translateY(-1px);
+}
+
+/* Ocultar badges rojos que muestren IDs de productos MongoDB (24 caracteres hexadecimales) */
+/* Solo ocultar badges dentro de las tarjetas de productos, NO en el navbar */
+.card-body .badge.bg-danger,
+.card-body span.badge.bg-danger,
+.product-card .card-body .badge.bg-danger,
+.product-card .card-body span.badge.bg-danger,
+.card .badge.bg-danger:not(.navbar .badge):not(.carrito-icono-wrapper .badge),
+.card-body .badge.bg-danger:not(.navbar .badge):not(.carrito-icono-wrapper .badge),
+.badge.bg-danger[class*="product"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Asegurar que el badge del carrito en el header SIEMPRE se muestre */
+.navbar .badge.bg-danger,
+nav .badge.bg-danger,
+.carrito-icono-wrapper .badge.bg-danger,
+.header-icons .badge.bg-danger {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+  /* Formularios estandarizados */
+  .form-control,
+  .form-select {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    height: 44px;
+    box-shadow: none !important;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15) !important;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #394b59;
+  }
+
+  .form-check-input {
+    border: 2px solid #e9ecef;
+  }
+
+  .input-group .form-control {
+    height: 44px;
+  }
+
+  .btn {
+    border-radius: 12px;
+  }
+
+  .invalid-feedback,
+  .text-danger {
+    font-size: 0.85rem;
+  }
+  
+  /* Footer siempre al fondo */
+  app-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  main {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Eliminar espacios entre header y contenido */
+  app-header {
+    margin-bottom: 0 !important;
+  }
+  
+  app-header + main {
+    margin-top: 0 !important;
+  }
+  
+  /* Estilos para imágenes */
+  .product-img {
+    object-fit: cover;
+    height: 200px;
+  }

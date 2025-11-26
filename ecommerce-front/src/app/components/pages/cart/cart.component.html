@@ -1,0 +1,166 @@
+<div class="container">
+  <!-- Cart Header -->
+  <div class="cart-header mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h2 class="page-title mb-0">Carrito de Compras</h2>
+        <p class="text-muted mb-0">{{ itemCount() }} {{ itemCount() === 1 ? 'producto' : 'productos' }} en tu carrito</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <button class="btn btn-outline-primary" routerLink="/productos">
+          <i class="bi bi-arrow-left me-2"></i>Seguir Comprando
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (cartItems.length > 0) {
+    <div class="row">
+      <!-- Cart Items -->
+      <div class="col-lg-8">
+        <div class="cart-items">
+          @for (item of cartItems; track getProductId(item.product)) {
+            <div class="cart-item">
+              <div class="row align-items-center">
+                <!-- Product Image -->
+                <div class="col-md-2">
+                  <div class="cart-item-image">
+                    <img [src]="getProductImage(item.product)" 
+                         [alt]="item.product.name" 
+                         class="product-image">
+                  </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="col-md-4">
+                  <div class="cart-item-info">
+                    <h5 class="product-name">{{ item.product.name }}</h5>
+                    <p class="product-description">{{ item.product.description }}</p>
+                    <span class="badge bg-secondary">{{ 
+                      getCategoryName(item.product.category)
+                    }}</span>
+                  </div>
+                </div>
+
+                <!-- Price -->
+                <div class="col-md-2">
+                  <div class="cart-item-price">
+                    <span class="price">${{ item.product.price | number:'1.2-2' }}</span>
+                  </div>
+                </div>
+
+                <!-- Quantity Controls -->
+                <div class="col-md-2">
+                  <div class="quantity-controls">
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-secondary quantity-btn"
+                      (click)="decreaseQuantity(item)"
+                      [disabled]="item.quantity <= 1">
+                      <i class="bi bi-dash"></i>
+                    </button>
+                    <span class="quantity-display">{{ item.quantity }}</span>
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-secondary quantity-btn"
+                      (click)="increaseQuantity(item)">
+                      <i class="bi bi-plus"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Subtotal and Actions -->
+                <div class="col-md-2">
+                  <div class="cart-item-actions">
+                    <div class="subtotal mb-2">
+                      <span class="subtotal-label">Subtotal:</span>
+                      <span class="subtotal-amount">${{ (item.product.price * item.quantity) | number:'1.2-2' }}</span>
+                    </div>
+                    <button 
+                      class="btn btn-outline-danger btn-sm"
+                      (click)="removeItem(item)"
+                      title="Eliminar producto">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Clear Cart Button -->
+        <div class="cart-actions mt-4">
+          <button class="btn btn-outline-danger" (click)="clearCart()">
+            <i class="bi bi-trash me-2"></i>Vaciar Carrito
+          </button>
+        </div>
+      </div>
+
+      <!-- Cart Summary -->
+      <div class="col-lg-4">
+        <div class="cart-summary">
+          <div class="summary-card">
+            <h4 class="summary-title">Resumen del Pedido</h4>
+            
+            <div class="summary-details">
+              <div class="summary-row">
+                <span>Subtotal ({{ itemCount() }} {{ itemCount() === 1 ? 'producto' : 'productos' }}):</span>
+                <span>${{ total() | number:'1.2-2' }}</span>
+              </div>
+              <div class="summary-row">
+                <span>Envío:</span>
+                <span class="text-success">Gratis</span>
+              </div>
+              <div class="summary-row">
+                <span>Impuestos:</span>
+                <span>$0.00</span>
+              </div>
+              <hr>
+              <div class="summary-row total-row">
+                <span class="total-label">Total:</span>
+                <span class="total-amount">${{ total() | number:'1.2-2' }}</span>
+              </div>
+            </div>
+
+            <div class="checkout-actions">
+              <button 
+                class="btn btn-primary btn-lg w-100 mb-3"
+                (click)="proceedToCheckout()">
+                <i class="bi bi-credit-card me-2"></i>Proceder al Pago
+              </button>
+              <a 
+                class="btn btn-outline-primary w-100"
+                routerLink="/productos">
+                <i class="bi bi-arrow-left me-2"></i>Seguir Comprando
+              </a>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="security-notice mt-3">
+              <small class="text-muted">
+                <i class="bi bi-shield-check me-1"></i>
+                Compra 100% segura y protegida
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Empty Cart State -->
+    <div class="empty-cart text-center py-5">
+      <div class="empty-cart-icon mb-4">
+        <i class="bi bi-cart-x"></i>
+      </div>
+      <h3 class="mb-3">Tu carrito está vacío</h3>
+      <p class="text-muted mb-4">
+        Parece que aún no has agregado ningún producto a tu carrito.<br>
+        ¡Explora nuestros productos y encuentra los mejores dulces!
+      </p>
+      <a routerLink="/productos" class="btn btn-primary btn-lg">
+        <i class="bi bi-shop me-2"></i>Ver Productos
+      </a>
+    </div>
+  }
+</div>

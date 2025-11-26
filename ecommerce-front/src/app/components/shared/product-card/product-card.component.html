@@ -1,0 +1,23 @@
+<div class="product-card-visual" [routerLink]="['/producto', product.id]" style="cursor:pointer;">
+  <div class="product-image-container-visual">
+    <img [src]="product.imageUrl" [alt]="product.name" class="product-image-visual">
+  </div>
+  <div class="product-content-visual">
+    <h5 class="product-title-visual">{{ product.name }}</h5>
+    <p class="product-description-visual">{{ product.description }}</p>
+    <div class="product-footer-visual">
+      <span class="product-price-visual">${{ product.price.toFixed(2) }}</span>
+      <button class="product-button-visual" (click)="addToCart(); $event.stopPropagation();" [disabled]="product.stock <= 0">
+        <i class="bi bi-cart-plus"></i>
+        <span>Agregar</span>
+      </button>
+    </div>
+    <div class="product-stock-visual">
+      @if (product.stock > 0) {
+        <span class="in-stock-visual">Disponible: {{ product.stock }} unidades</span>
+      } @else {
+        <span class="out-of-stock-visual">Agotado</span>
+      }
+    </div>
+  </div>
+</div>

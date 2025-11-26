@@ -1,0 +1,87 @@
+<div class="login-card">
+  <div class="text-center mb-4">
+    <h2 class="login-title">¡Te extrañamos!</h2>
+    <p class="text-muted">Inicia sesión en tu cuenta de Dulces Yankee</p>
+  </div>
+
+    @if (errorMessage) {
+      <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorMessage }}
+      </div>
+    }
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="mb-3">
+      <label for="email" class="form-label">Correo Electrónico</label>
+      <input 
+        type="email" 
+        class="form-control" 
+        [class.is-invalid]="isFieldInvalid('email')"
+        id="email" 
+        formControlName="email"
+        placeholder="tu@email.com">
+      @if (isFieldInvalid('email')) {
+        <div class="invalid-feedback">
+          @if (loginForm.get('email')?.errors?.['required']) {
+            El correo electrónico es obligatorio
+          }
+          @if (loginForm.get('email')?.errors?.['email']) {
+            Por favor ingresa un correo electrónico válido
+          }
+        </div>
+      }
+    </div>
+
+    <div class="mb-4">
+      <label for="password" class="form-label">Contraseña</label>
+      <div class="input-group">
+        <input 
+          [type]="showPassword ? 'text' : 'password'" 
+          class="form-control" 
+          [class.is-invalid]="isFieldInvalid('password')"
+          id="password" 
+          formControlName="password"
+          placeholder="Tu contraseña">
+        <button 
+          class="btn btn-outline-secondary" 
+          type="button" 
+          (click)="togglePasswordVisibility()">
+          <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+        </button>
+      </div>
+      @if (isFieldInvalid('password')) {
+        <div class="invalid-feedback">
+          @if (loginForm.get('password')?.errors?.['required']) {
+            La contraseña es obligatoria
+          }
+          @if (loginForm.get('password')?.errors?.['minlength']) {
+            La contraseña debe tener al menos 6 caracteres
+          }
+        </div>
+      }
+    </div>
+
+    <button 
+      type="submit" 
+      class="btn btn-primary w-100 mb-3"
+      [disabled]="loginForm.invalid || loading">
+      @if (loading) {
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Iniciando sesión...
+      } @else {
+        Iniciar Sesión
+      }
+    </button>
+
+    <div class="text-center">
+      <p class="mb-2">
+        <a href="#" class="text-decoration-none small">¿Olvidaste tu contraseña?</a>
+      </p>
+      <p class="mb-0">
+        ¿No tienes cuenta? 
+        <a routerLink="/register" class="text-decoration-none">Regístrate aquí</a>
+      </p>
+    </div>
+  </form>
+</div>

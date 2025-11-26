@@ -1,0 +1,218 @@
+<section class="hero-section mb-5">
+  <div class="hero-background">
+    <div class="hero-pattern"></div>
+    <div class="hero-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+  </div>
+  
+  <div class="container-fluid px-4">
+    <div class="row align-items-center min-vh-50">
+      <div class="col-lg-6">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <i class="bi bi-star-fill me-2"></i>
+            #1 en Dulces Mexicanos
+          </div>
+          <h1 class="hero-title">
+            <span class="title-main">Dulces</span>
+            <span class="title-accent">Yankee</span>
+          </h1>
+          <p class="hero-subtitle">
+            Los mejores dulces mexicanos y golosinas tradicionales 
+            <span class="highlight-text">al mejor precio</span>
+          </p>
+          <div class="hero-features">
+            <div class="feature-item">
+              <i class="bi bi-truck"></i>
+              <span>Envío Gratis</span>
+            </div>
+            <div class="feature-item">
+              <i class="bi bi-shield-check"></i>
+              <span>100% Original</span>
+            </div>
+            <div class="feature-item">
+              <i class="bi bi-heart"></i>
+              <span>Hecho con Amor</span>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <a routerLink="/productos" class="btn btn-outline-light btn-lg hero-btn-secondary">
+              <i class="bi bi-bag me-2"></i>
+              Ver Todos los Productos
+            </a>
+            <a routerLink="/productos" class="btn btn-outline-light btn-lg hero-btn-secondary">
+              <i class="bi bi-play-circle me-2"></i>
+              Ver Ofertas
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-visual">
+          <div class="product-showcase">
+            <div class="showcase-item item-1">
+              <img src="assets/picafresas.webp" alt="Picafresas" class="showcase-image">
+              <div class="showcase-badge">¡Nuevo!</div>
+            </div>
+            <div class="showcase-item item-2">
+              <img src="assets/karlas.webp" alt="Cerezitas Karla" class="showcase-image">
+              <div class="showcase-badge">Popular</div>
+            </div>
+            <div class="showcase-item item-3">
+              <img src="assets/chocolates.webp" alt="Chocolates" class="showcase-image">
+              <div class="showcase-badge">Favorito</div>
+            </div>
+            <div class="floating-elements">
+              <div class="floating-icon icon-1">🍭</div>
+              <div class="floating-icon icon-2">🍬</div>
+              <div class="floating-icon icon-3">🍫</div>
+              <div class="floating-icon icon-4">🍪</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="featured-products mb-5">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">🔥 Ofertas Destacadas</h2>
+    <p class="text-center text-muted mb-4">Los 10 productos más baratos y con mejores ofertas</p>
+    
+    @if (loading) {
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    } @else {
+      <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          @for (chunk of productChunks; track $index) {
+            <div class="carousel-item" [class.active]="$index === 0">
+              <div class="row g-4">
+                @for (product of chunk; track product.id || product._id) {
+                  <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card h-100 product-card shadow-sm">
+                      <div class="product-image-container">
+                        <img [src]="product.imageUrl || 'assets/placeholder.jpg'" 
+                             [alt]="product.name"
+                             class="card-img-top product-image">
+                        <div class="product-badge">¡OFERTA!</div>
+                      </div>
+                      <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text text-muted small flex-grow-1">{{ product.description }}</p>
+                        <!-- ID badge removed -->
+                        <div class="d-flex justify-content-between align-items-center">
+                          <span class="price">${{ product.price | number:'1.2-2' }}</span>
+                          <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" 
+                                    [routerLink]="['/producto', product.id || product._id]">
+                              Ver más
+                            </button>
+                            <button class="btn btn-primary" 
+                                    (click)="addToCart(product)"
+                                    [disabled]="product.stock === 0">
+                              <i class="bi bi-cart-plus"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="text-muted">Stock: {{ product.stock }}</small>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+        
+        @if (productChunks.length > 1) {
+          <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<section class="video-section mb-5">
+  
+  <div class="container">
+  </div>
+  
+  <div class="video-wrapper-full-width"> 
+    <video class="promo-video" 
+           src="assets/VideoYankees2.mp4" 
+           controls 
+           autoplay 
+           muted 
+           loop 
+           playsinline>
+      Tu navegador no soporta el elemento de video.
+    </video>
+  </div>
+</section>
+
+<section class="categories-section mb-5">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">Categorías</h2>
+    <div class="row g-3">
+      <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+        <div class="category-card text-center" (click)="navigateToCategory('Gomitas')">
+          <i class="category-icon">🐻</i>
+          <h6>Gomitas</h6>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+        <div class="category-card text-center" (click)="navigateToCategory('Dulces')">
+          <i class="category-icon">🥨</i>
+          <h6>Dulces</h6>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+        <div class="category-card text-center" (click)="navigateToCategory('Chocolates')">
+          <i class="category-icon">🍫</i>
+          <h6>Chocolates</h6>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+        <div class="category-card text-center" (click)="navigateToCategory('Paletas')">
+         <i class="category-icon">🍭</i>
+          <h6>Paletas</h6>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+        <div class="category-card text-center" (click)="navigateToCategory('Chicles')">
+          <i class="category-icon">🍬</i>
+          <h6>Chicles</h6>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+        <div class="category-card text-center" (click)="navigateToCategory('Botanas')">
+          <i class="category-icon">🍿</i>
+          <h6>Botanas</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container text-center">
+    <h2 class="mb-3">¿Listo para endulzar tu día?</h2>
+    <p class="mb-4">Descubre nuestra amplia variedad de dulces mexicanos y golosinas</p>
+    <a routerLink="/productos" class="btn btn-primary btn-lg">Comprar Ahora</a>
+  </div>
+</section>

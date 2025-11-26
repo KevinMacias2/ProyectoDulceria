@@ -1,0 +1,151 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            @if (loadingProfile) {
+              <app-skeleton type="circle" [width]="120" [height]="120"></app-skeleton>
+            } @else if (currentUser?.profileImage) {
+              <img [src]="currentUser?.profileImage" [alt]="currentUser?.name" class="avatar-img">
+            } @else {
+              <div class="avatar-placeholder">
+                <i class="bi bi-person-fill"></i>
+              </div>
+            }
+          </div>
+          <div class="profile-info">
+            @if (loadingProfile) {
+              <app-skeleton type="text" [width]="60"></app-skeleton>
+              <app-skeleton type="text" [width]="40"></app-skeleton>
+            } @else {
+              <h1 class="profile-name">{{ currentUser?.name || 'Usuario' }}</h1>
+              <p class="profile-email">{{ currentUser?.email || '' }}</p>
+              <span class="badge bg-primary">{{ currentUser?.role || 'user' }}</span>
+              @if (profileError) {
+                <p class="text-warning mt-2">{{ profileError }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="profile-content">
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <div class="profile-section">
+                <h5>Información Personal</h5>
+                @if (loadingProfile) {
+                  <app-skeleton type="text" [width]="90"></app-skeleton>
+                  <app-skeleton type="text" [width]="70"></app-skeleton>
+                  <app-skeleton type="text" [width]="80"></app-skeleton>
+                } @else {
+                  <div class="info-item">
+                    <label>Nombre:</label>
+                    <span>{{ currentUser?.name || 'No especificado' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Email:</label>
+                    <span>{{ currentUser?.email || 'No especificado' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Teléfono:</label>
+                    <span>{{ currentUser?.phone || 'No especificado' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Tipo de cuenta:</label>
+                    <span class="badge bg-secondary">{{ currentUser?.role === 'admin' ? 'Administrador' : 'Usuario' }}</span>
+                  </div>
+                  @if (currentUser?.createdAt) {
+                    <div class="info-item">
+                      <label>Miembro desde:</label>
+                      <span>{{ currentUser?.createdAt | date:'medium' }}</span>
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="profile-section">
+                <h5>Acciones Rápidas</h5>
+                <div class="action-buttons">
+                  <a routerLink="/editar-perfil" class="btn btn-primary mb-2">
+                    <i class="bi bi-pencil me-2"></i>Editar Perfil
+                  </a>
+                  <a routerLink="/carrito" class="btn btn-outline-primary mb-2">
+                    <i class="bi bi-cart me-2"></i>Ver Carrito
+                  </a>
+                  <a routerLink="/productos" class="btn btn-outline-secondary mb-2">
+                    <i class="bi bi-box me-2"></i>Ver Productos
+                  </a>
+                  @if (currentUser?.role === 'admin') {
+                    <a routerLink="/agregar-producto" class="btn btn-outline-success mb-2">
+                      <i class="bi bi-plus-circle me-2"></i>Agregar Producto
+                    </a>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-section orders-section">
+            <h5>Historial de Pedidos</h5>
+            @if (loadingOrders) {
+              <div class="orders-skeleton">
+                @for (item of [1,2,3]; track item) {
+                  <div class="order-skeleton-row">
+                    <app-skeleton type="text" [width]="80"></app-skeleton>
+                    <app-skeleton type="text" [width]="60"></app-skeleton>
+                  </div>
+                }
+              </div>
+            } @else if (ordersError) {
+              <div class="alert alert-warning mb-0">{{ ordersError }}</div>
+            } @else if (hasOrders) {
+              <div class="order-card" *ngFor="let order of orders">
+                <div class="order-card-header">
+                  <div>
+                    <strong>Pedido:</strong> {{ order.id || order._id }}
+                  </div>
+                  <span class="badge bg-info">{{ order.date | date:'medium' }}</span>
+                </div>
+                <div class="order-card-body">
+                  <div class="order-item">
+                    <label>Total</label>
+                    <span>${{ order.total | number:'1.2-2' }}</span>
+                  </div>
+                  <div class="order-item">
+                    <label>Artículos</label>
+                    <span>{{ order.items.length }}</span>
+                  </div>
+                  <div class="order-products">
+                    <label>Productos:</label>
+                    <ul>
+                      <li *ngFor="let item of order.items">
+                        {{ item.product.name }} (x{{ item.quantity }})
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="empty-state text-center">
+                <i class="bi bi-receipt-cutoff empty-icon"></i>
+                <h4 class="mt-3">Sin pedidos recientes</h4>
+                <p class="text-muted">Cuando realices una compra, aparecerá aquí.</p>
+                <a routerLink="/productos" class="btn btn-primary">Explorar productos</a>
+              </div>
+            }
+          </div>
+
+          <div class="profile-actions mt-4">
+            <button class="btn btn-danger" (click)="logout()">
+              <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

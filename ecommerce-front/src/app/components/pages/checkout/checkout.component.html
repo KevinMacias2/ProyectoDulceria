@@ -1,0 +1,353 @@
+<div class="container">
+    <h2 class="mb-4">Finalizar Compra</h2>
+    
+    @if (cartLoading) {
+      <div class="row g-4">
+        <div class="col-md-8">
+          <div class="card p-4">
+            <app-skeleton type="text" [width]="60"></app-skeleton>
+            <app-skeleton type="text" [width]="90"></app-skeleton>
+            <app-skeleton type="text" [width]="80"></app-skeleton>
+            <app-skeleton type="button" [width]="200"></app-skeleton>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-4">
+            <app-skeleton type="text" [width]="70"></app-skeleton>
+            <app-skeleton type="text" [width]="50"></app-skeleton>
+            <app-skeleton type="text" [width]="40"></app-skeleton>
+          </div>
+        </div>
+      </div>
+    } @else if (cartItems.length > 0) {
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="mb-0">Información de Contacto</h5>
+            </div>
+            <div class="card-body">
+              <form #checkoutForm="ngForm" (ngSubmit)="onSubmit(checkoutForm)">
+                <div class="mb-3">
+                  <label for="customerName" class="form-label">Nombre Completo</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="customerName" 
+                    name="customerName"
+                    [(ngModel)]="customerDetails.customerName"
+                    required
+                    placeholder="Ingresa tu nombre completo"
+                    #nameInput="ngModel">
+                  <div class="text-danger" *ngIf="paymentError && !customerDetails.customerName">Este campo es requerido.</div>
+                  @if (nameInput.invalid && (nameInput.dirty || nameInput.touched)) {
+                    <div class="text-danger">El nombre es requerido</div>
+                  }
+                </div>
+                
+                <div class="mb-3">
+                  <label for="email" class="form-label">Correo Electrónico</label>
+                  <input 
+                    type="email" 
+                    class="form-control" 
+                    id="email" 
+                    name="email"
+                    [(ngModel)]="customerDetails.email"
+                    required
+                    email
+                    placeholder="Ingresa tu correo electrónico"
+                    #emailInput="ngModel">
+                  <div class="text-danger" *ngIf="paymentError && !customerDetails.email">Este campo es requerido.</div>
+                  @if (emailInput.invalid && (emailInput.dirty || emailInput.touched)) {
+                    <div class="text-danger">
+                      Ingrese un correo electrónico válido
+                    </div>
+                  }
+                </div>
+                
+                <div class="mb-3">
+                  <label for="phone" class="form-label">Teléfono</label>
+                  <input 
+                    type="tel" 
+                    class="form-control" 
+                    id="phone" 
+                    name="phone"
+                    [(ngModel)]="customerDetails.phone"
+                    required
+                    maxlength="10"
+                    placeholder="Ingresa tu teléfono (10 dígitos)"
+                    (input)="onPhoneInput($event)"
+                    #phoneInput="ngModel">
+                  <small class="form-text text-muted">Ingresa 10 dígitos (formato mexicano)</small>
+                  <div class="text-danger" *ngIf="paymentError && !customerDetails.phone">Este campo es requerido.</div>
+                  @if (phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)) {
+                    <div class="text-danger">El teléfono es requerido</div>
+                  }
+                  @if (customerDetails.phone && !validatePhone(customerDetails.phone) && (phoneInput.dirty || phoneInput.touched)) {
+                    <div class="text-danger">El teléfono debe tener exactamente 10 dígitos</div>
+                  }
+                </div>
+                
+                <div class="mb-3">
+                  <label for="address" class="form-label">Dirección de Envío</label>
+                  <textarea 
+                    class="form-control" 
+                    id="address" 
+                    name="address"
+                    rows="3"
+                    [(ngModel)]="customerDetails.address"
+                    required
+                    placeholder="Ingresa tu dirección completa (calle, número, colonia)"
+                    #addressInput="ngModel"></textarea>
+                  <div class="text-danger" *ngIf="paymentError && !customerDetails.address">Este campo es requerido.</div>
+                  @if (addressInput.invalid && (addressInput.dirty || addressInput.touched)) {
+                    <div class="text-danger">La dirección es requerida</div>
+                  }
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="city" class="form-label">Ciudad</label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="city" 
+                        name="city"
+                        [(ngModel)]="customerDetails.city"
+                        required
+                        placeholder="Ingresa tu ciudad"
+                        #cityInput="ngModel">
+                      @if (cityInput.invalid && (cityInput.dirty || cityInput.touched)) {
+                        <div class="text-danger">La ciudad es requerida</div>
+                      }
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="state" class="form-label">Estado</label>
+                      <select 
+                        class="form-select" 
+                        id="state" 
+                        name="state"
+                        [(ngModel)]="customerDetails.state"
+                        required
+                        #stateInput="ngModel">
+                        <option value="">Selecciona un estado</option>
+                        @for (estado of estadosMexico; track estado) {
+                          <option [value]="estado">{{ estado }}</option>
+                        }
+                      </select>
+                      @if (stateInput.invalid && (stateInput.dirty || stateInput.touched)) {
+                        <div class="text-danger">El estado es requerido</div>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="postalCode" class="form-label">Código Postal</label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="postalCode" 
+                        name="postalCode"
+                        [(ngModel)]="customerDetails.postalCode"
+                        required
+                        placeholder="Ingresa tu código postal"
+                        #postalInput="ngModel">
+                      @if (postalInput.invalid && (postalInput.dirty || postalInput.touched)) {
+                        <div class="text-danger">El código postal es requerido</div>
+                      }
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="country" class="form-label">País</label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="country" 
+                        name="country"
+                        [(ngModel)]="customerDetails.country"
+                        required
+                        placeholder="Ingresa tu país"
+                        #countryInput="ngModel">
+                      @if (countryInput.invalid && (countryInput.dirty || countryInput.touched)) {
+                        <div class="text-danger">El país es requerido</div>
+                      }
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Método de Pago</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="pagoTarjeta" value="tarjeta" [(ngModel)]="paymentMethod" required>
+                    <label class="form-check-label" for="pagoTarjeta">
+                      Tarjeta de crédito/débito
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="pagoPaypal" value="paypal" [(ngModel)]="paymentMethod" required>
+                    <label class="form-check-label" for="pagoPaypal">
+                      PayPal
+                    </label>
+                  </div>
+                  <div class="text-danger" *ngIf="checkoutForm.submitted && !paymentMethod">
+                    Selecciona un método de pago
+                  </div>
+                </div>
+
+                <!-- Formulario de tarjeta -->
+                <div *ngIf="paymentMethod === 'tarjeta'" class="mb-3 border rounded p-3 bg-light">
+                  <h6 class="mb-3">Información de la Tarjeta</h6>
+                  <div class="mb-3">
+                    <label for="cardNumber" class="form-label">Número de tarjeta <span class="text-danger">*</span></label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="cardNumber" 
+                      name="cardNumber" 
+                      [(ngModel)]="cardDetails.cardNumber" 
+                      maxlength="19" 
+                      required 
+                      placeholder="1234 5678 9012 3456"
+                      (input)="onCardNumberInput($event)"
+                      #cardNumberInput="ngModel">
+                    <small class="form-text text-muted">Ingresa el número completo de tu tarjeta</small>
+                    <div class="text-danger" *ngIf="cardNumberInput.invalid && (cardNumberInput.dirty || cardNumberInput.touched)">
+                      <div *ngIf="cardNumberInput.errors?.['required']">El número de tarjeta es requerido</div>
+                      <div *ngIf="!cardNumberInput.errors?.['required'] && cardDetails.cardNumber && !validateCardNumber(cardDetails.cardNumber)">
+                        El número de tarjeta no es válido
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="cardName" class="form-label">Nombre en la tarjeta <span class="text-danger">*</span></label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="cardName" 
+                      name="cardName" 
+                      [(ngModel)]="cardDetails.cardName" 
+                      required
+                      placeholder="Ingresa el nombre tal como aparece en la tarjeta"
+                      #cardNameInput="ngModel">
+                    <div class="text-danger" *ngIf="cardNameInput.invalid && (cardNameInput.dirty || cardNameInput.touched)">
+                      <div *ngIf="cardNameInput.errors?.['required']">El nombre es requerido</div>
+                      <div *ngIf="!cardNameInput.errors?.['required'] && cardDetails.cardName && !validateCardName(cardDetails.cardName)">
+                        El nombre debe contener solo letras y espacios (mínimo 2 caracteres)
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="cardExpiry" class="form-label">Fecha de expiración <span class="text-danger">*</span> <small class="text-muted">(MM/AA)</small></label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="cardExpiry" 
+                        name="cardExpiry" 
+                        [(ngModel)]="cardDetails.cardExpiry" 
+                        placeholder="MM/AA" 
+                        maxlength="5" 
+                        required 
+                        pattern="(0[1-9]|1[0-2])\/\d{2}" 
+                        (input)="onCardExpiryInput($event)"
+                        #cardExpiryInput="ngModel">
+                      <div class="text-danger" *ngIf="cardExpiryInput.invalid && (cardExpiryInput.dirty || cardExpiryInput.touched)">
+                        <div *ngIf="cardExpiryInput.errors?.['required']">La fecha de expiración es requerida</div>
+                        <div *ngIf="!cardExpiryInput.errors?.['required'] && cardDetails.cardExpiry && !validateCardExpiry(cardDetails.cardExpiry)">
+                          La fecha no es válida o está vencida. Formato: MM/AA
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="cardCvv" class="form-label">CVV <span class="text-danger">*</span></label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="cardCvv" 
+                        name="cardCvv" 
+                        [(ngModel)]="cardDetails.cardCvv" 
+                        maxlength="4" 
+                        required 
+                        pattern="[0-9]{3,4}"
+                        placeholder="CVV"
+                        (input)="onCardCvvInput($event)"
+                        #cardCvvInput="ngModel">
+                      <small class="form-text text-muted">3 o 4 dígitos en el reverso de la tarjeta</small>
+                      <div class="text-danger" *ngIf="cardCvvInput.invalid && (cardCvvInput.dirty || cardCvvInput.touched)">
+                        <div *ngIf="cardCvvInput.errors?.['required']">El CVV es requerido</div>
+                        <div *ngIf="!cardCvvInput.errors?.['required'] && cardDetails.cardCvv && !validateCardCvv(cardDetails.cardCvv)">
+                          El CVV debe tener 3 o 4 dígitos
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Formulario de PayPal -->
+                <div *ngIf="paymentMethod === 'paypal'" class="mb-3 border rounded p-3 bg-light">
+                  <div class="mb-2">
+                    <label for="paypalEmail" class="form-label">Correo de PayPal</label>
+                    <input 
+                      type="email" 
+                      class="form-control" 
+                      id="paypalEmail" 
+                      name="paypalEmail" 
+                      [(ngModel)]="paypalEmail" 
+                      required
+                      placeholder="Ingresa tu correo de PayPal">
+                    <div class="text-danger" *ngIf="paymentError && !paypalEmail">Este campo es requerido.</div>
+                  </div>
+                </div>
+                
+                <div *ngIf="paymentError" class="alert alert-danger mt-2">{{ paymentError }}</div>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <a class="btn btn-outline-secondary" routerLink="/carrito">
+                    Volver al Carrito
+                  </a>
+                  <button 
+                    type="submit" 
+                    class="btn btn-primary">
+                    Confirmar Pedido
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">Resumen del Pedido</h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                @for (item of cartItems; track item.product.id) {
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ item.product.name }} (x{{ item.quantity }})
+                    <span>${{ (item.product.price * item.quantity).toFixed(2) }}</span>
+                  </li>
+                }
+              </ul>
+              <div class="d-flex justify-content-between mt-3 fw-bold">
+                <span>Total:</span>
+                <span>${{ total.toFixed(2) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="alert alert-warning">
+        No hay productos en el carrito. <a routerLink="/productos">¡Continúa comprando!</a>
+      </div>
+    }
+  </div>

@@ -1,0 +1,44 @@
+/* Padding para separar del header */
+.container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Estilos para el contenedor del formulario */
+.add-product-container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Espaciado adicional para el formulario */
+.card {
+  margin-top: 1rem;
+}
+
+/* Mejorar el espaciado de los campos del formulario */
+.form-control {
+  margin-bottom: 0.5rem;
+}
+
+/* Espaciado para los botones */
+.btn {
+  margin-top: 1rem;
+}
+
+/* Responsive padding */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .add-product-container {
+    padding: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}

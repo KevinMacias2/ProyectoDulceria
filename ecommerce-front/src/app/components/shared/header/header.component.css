@@ -1,0 +1,63 @@
+.navbar {
+  margin-bottom: 0;
+  background: linear-gradient(90deg, #6a5acd 0%, #a052be 100%);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.container {
+  max-width: 100vw;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.logo-img {
+  background: transparent;
+  margin-left: 1.5rem;
+}
+
+.bi-cart,
+.bi-person-circle {
+  color: #fff !important;
+}
+
+.carrito-icono-wrapper {
+  display: inline-block;
+  position: relative;
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.carrito-icono-wrapper .bi-cart {
+  vertical-align: middle;
+}
+
+/* Asegurar que el badge del carrito SIEMPRE se muestre - mayor especificidad */
+.navbar .carrito-icono-wrapper .badge.bg-danger,
+nav .carrito-icono-wrapper .badge.bg-danger,
+.header-icons .badge.bg-danger,
+.navbar .badge.bg-danger {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.navbar-nav {
+  margin-left: 0 !important;
+}
+
+.navbar .container {
+  justify-content: flex-start !important;
+}
+
+.header-icons {
+  gap: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-toggle::after {
+  border-top-color: #fff !important;
+}
+
+ 

@@ -1,0 +1,82 @@
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.login-title {
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  border-radius: 10px;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.alert {
+  border-radius: 10px;
+  border: none;
+}
+
+.invalid-feedback {
+  display: block;
+  font-size: 0.875rem;
+}
+
+.is-invalid {
+  border-color: #dc3545;
+}
+
+.input-group .btn {
+  border-radius: 0 10px 10px 0;
+}
+
+.input-group .form-control {
+  border-radius: 10px 0 0 10px;
+}
+
+@media (max-width: 500px) {
+  .login-card {
+    margin: 10px;
+    padding: 1.5rem;
+  }
+}

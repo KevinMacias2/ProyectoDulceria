@@ -1,0 +1,443 @@
+/* Padding para separar del header */
+.container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Espaciado adicional para las tarjetas */
+.card {
+  margin-top: 1rem;
+}
+
+/* Estilos para el boucher/comprobante */
+#boucher {
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none !important;
+}
+
+/* Header del Boucher */
+.boucher-header {
+  background: linear-gradient(90deg, #6a5acd 0%, #a052be 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.boucher-logo-container {
+  flex-shrink: 0;
+}
+
+.boucher-logo {
+  width: 80px;
+  height: auto;
+  background: white;
+  padding: 5px;
+  border-radius: 6px;
+}
+
+.boucher-title-container {
+  flex: 1;
+  min-width: 200px;
+}
+
+.boucher-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.boucher-subtitle {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
+  opacity: 0.9;
+  color: white;
+}
+
+.print-btn {
+  flex-shrink: 0;
+}
+
+.boucher-body {
+  padding: 1.25rem 1.5rem;
+}
+
+/* Estilos para la información */
+.boucher-body h5 {
+  color: #6a5acd;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.boucher-body .border-bottom {
+  border-bottom: 2px solid #6a5acd !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.boucher-body p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.boucher-body .row {
+  margin-bottom: 1rem !important;
+}
+
+.boucher-body .mb-4 {
+  margin-bottom: 1rem !important;
+}
+
+.boucher-body .mb-3 {
+  margin-bottom: 0.75rem !important;
+}
+
+.boucher-body table {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.boucher-body table th,
+.boucher-body table td {
+  padding: 0.5rem 0.75rem;
+}
+
+/* Estilos de impresión mejorados */
+@media print {
+  /* Resetear márgenes y padding del body */
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+  
+  /* Ocultar específicamente elementos comunes */
+  app-header,
+  app-header *,
+  app-footer,
+  app-footer *,
+  footer,
+  footer *,
+  .footer-container,
+  .footer-container *,
+  nav,
+  nav *,
+  .navbar,
+  .navbar *,
+  .btn,
+  .alert,
+  .toast,
+  .toast-container,
+  app-toast,
+  app-toast *,
+  main,
+  router-outlet,
+  router-outlet *,
+  header,
+  header *,
+  .breadcrumb,
+  .breadcrumb * {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+  }
+  
+  /* Ocultar el contenedor excepto el boucher */
+  .container {
+    background: white !important;
+  }
+  
+  .container > *:not(#boucher):not(.boucher-print) {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  .card:not(#boucher):not(.boucher-print) {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  /* Mostrar SOLO el boucher y TODO su contenido */
+  #boucher,
+  .boucher-print {
+    display: block !important;
+    visibility: visible !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+    page-break-after: avoid !important;
+    z-index: 9999 !important;
+  }
+  
+  /* Asegurar que TODO dentro del boucher sea visible - mayor especificidad */
+  #boucher *,
+  .boucher-print *,
+  #boucher.boucher-print * {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Asegurar que los elementos específicos se muestren correctamente */
+  #boucher .boucher-header,
+  #boucher .boucher-body,
+  #boucher .row,
+  #boucher .col-md-6,
+  #boucher .col-md-12,
+  #boucher h2,
+  #boucher h5,
+  #boucher p,
+  #boucher table,
+  #boucher tr,
+  #boucher td,
+  #boucher th,
+  #boucher .badge,
+  #boucher img {
+    display: revert !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Ocultar botón de imprimir */
+  .print-btn,
+  .print-btn * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  /* Asegurar que el header del boucher se imprima correctamente */
+  .boucher-header {
+    background: linear-gradient(90deg, #6a5acd 0%, #a052be 100%) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    display: flex !important;
+    visibility: visible !important;
+    position: relative !important;
+  }
+  
+  /* Asegurar que el body del boucher se muestre */
+  .boucher-body {
+    display: block !important;
+    visibility: visible !important;
+    position: relative !important;
+  }
+  
+  /* Configuración de página - sin márgenes, sin footer del navegador */
+  @page {
+    margin: 0.5cm !important;
+    size: A4 !important;
+  }
+  
+  /* Optimizar para una sola hoja */
+  #boucher {
+    max-height: calc(100vh - 1cm) !important;
+    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
+  }
+  
+  /* Reducir padding en impresión */
+  #boucher .boucher-header {
+    padding: 0.5rem 0.75rem !important;
+    margin-bottom: 0 !important;
+  }
+  
+  #boucher .boucher-logo {
+    width: 60px !important;
+    padding: 3px !important;
+  }
+  
+  #boucher .boucher-title {
+    font-size: 1.1rem !important;
+    margin-bottom: 0.1rem !important;
+  }
+  
+  #boucher .boucher-subtitle {
+    font-size: 0.7rem !important;
+    margin-top: 0.1rem !important;
+    margin-bottom: 0 !important;
+  }
+  
+  #boucher .boucher-body {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  #boucher h5 {
+    font-size: 0.85rem !important;
+    margin-bottom: 0.3rem !important;
+    margin-top: 0.5rem !important;
+  }
+  
+  #boucher h5:first-of-type {
+    margin-top: 0 !important;
+  }
+  
+  #boucher p {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.25rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  #boucher .row {
+    margin-bottom: 0.5rem !important;
+  }
+  
+  #boucher .mb-4,
+  #boucher .mb-3 {
+    margin-bottom: 0.5rem !important;
+  }
+  
+  #boucher .mb-2 {
+    margin-bottom: 0.4rem !important;
+  }
+  
+  #boucher .mb-1 {
+    margin-bottom: 0.2rem !important;
+  }
+  
+  #boucher .mb-0 {
+    margin-bottom: 0 !important;
+  }
+  
+  #boucher .pb-1 {
+    padding-bottom: 0.3rem !important;
+  }
+  
+  #boucher .pb-2 {
+    padding-bottom: 0.4rem !important;
+  }
+  
+  #boucher table {
+    font-size: 0.7rem !important;
+    margin-bottom: 0.3rem !important;
+  }
+  
+  #boucher table th,
+  #boucher table td {
+    padding: 0.3rem 0.4rem !important;
+  }
+  
+  #boucher table thead th {
+    font-size: 0.75rem !important;
+    padding: 0.35rem 0.4rem !important;
+  }
+  
+  #boucher .table-responsive {
+    margin-bottom: 0.4rem !important;
+  }
+  
+  #boucher .badge {
+    font-size: 0.7rem !important;
+    padding: 0.2rem 0.4rem !important;
+  }
+  
+  #boucher .fs-5 {
+    font-size: 0.9rem !important;
+  }
+  
+  #boucher .fw-bold {
+    font-weight: 600 !important;
+  }
+  
+  /* Reducir espacio entre secciones */
+  #boucher .border-bottom {
+    margin-bottom: 0.3rem !important;
+  }
+  
+  /* Asegurar que las tablas se impriman bien */
+  #boucher table {
+    display: table !important;
+    visibility: visible !important;
+    width: 100% !important;
+    page-break-inside: avoid !important;
+  }
+  
+  #boucher tr {
+    display: table-row !important;
+    visibility: visible !important;
+    page-break-inside: avoid !important;
+  }
+  
+  #boucher td,
+  #boucher th {
+    display: table-cell !important;
+    visibility: visible !important;
+  }
+  
+  /* Asegurar que las filas mantengan su estructura */
+  #boucher .row {
+    display: flex !important;
+    visibility: visible !important;
+  }
+  
+  #boucher .col-md-6,
+  #boucher .col-md-12 {
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  /* Asegurar que los colores se impriman */
+  #boucher .badge,
+  #boucher .table-primary {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  /* Asegurar que las imágenes se impriman */
+  #boucher img {
+    display: block !important;
+    visibility: visible !important;
+    max-width: 100% !important;
+  }
+  
+  /* Asegurar que los párrafos se muestren */
+  #boucher p {
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  /* Asegurar que los títulos se muestren */
+  #boucher h2,
+  #boucher h5 {
+    display: block !important;
+    visibility: visible !important;
+  }
+}
+
+/* Responsive padding */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .boucher-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .boucher-logo {
+    width: 100px;
+  }
+  
+  .boucher-title {
+    font-size: 1.5rem;
+  }
+}

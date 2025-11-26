@@ -1,0 +1,61 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" routerLink="/">
+        <img src="assets/LogoYankee.png" alt="Dulces Logo" class="logo-img" style="width: 130px; height: 110px;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/" routerLinkActive="active" style="color: #fff;">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/productos" routerLinkActive="active" style="color: #fff;">Productos</a>
+          </li>
+                  <li class="nav-item" *ngIf="isAuthenticated && currentUser?.role === 'admin'">
+                    <a class="nav-link" routerLink="/agregar-producto" routerLinkActive="active" style="color: #fff;">Agregar producto</a>
+                  </li>
+                  <li class="nav-item" *ngIf="isAuthenticated && currentUser?.role === 'admin'">
+                    <a class="nav-link" routerLink="/panel-usuarios" routerLinkActive="active" style="color: #fff;">Panel de usuarios</a>
+                  </li>
+        </ul>
+        <div class="d-flex align-items-center header-icons" style="margin-right: 2rem;">
+          <a class="btn border-0 bg-transparent me-3 position-relative" routerLink="/carrito">
+            <span class="carrito-icono-wrapper">
+              <i class="bi bi-cart fs-3"></i>
+              @if (itemCount > 0) {
+                <span class="badge bg-danger position-absolute top-0 start-100 translate-middle ms-1">{{ itemCount }}</span>
+              }
+            </span>
+          </a>
+          
+          <!-- User not authenticated - show login/register buttons -->
+          <div *ngIf="!isAuthenticated" class="d-flex gap-2">
+            <a class="btn btn-outline-light btn-sm" routerLink="/login">Iniciar Sesión</a>
+            <a class="btn btn-light btn-sm" routerLink="/register">Registrarse</a>
+          </div>
+          
+          <!-- User authenticated - show profile dropdown -->
+          <div *ngIf="isAuthenticated" class="dropdown d-flex align-items-center">
+            <button class="btn border-0 bg-transparent p-0 dropdown-toggle d-flex align-items-center" type="button" id="perfilDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <ng-container *ngIf="currentUser?.profileImage; else iconoPerfil">
+                <img [src]="currentUser!.profileImage" alt="Perfil" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover;">
+              </ng-container>
+              <ng-template #iconoPerfil>
+                <i class="bi bi-person-circle fs-3"></i>
+              </ng-template>
+              <span *ngIf="currentUser?.name" class="ms-2 text-white fw-semibold">{{ currentUser!.name }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
+              <li><a class="dropdown-item" routerLink="/perfil">Mi Perfil</a></li>
+              <li><a class="dropdown-item" routerLink="/editar-perfil">Editar perfil</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault()">Cerrar sesión</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>

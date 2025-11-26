@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "types": ["cypress"],
+    "target": "ES2019",
+    "lib": ["es2019", "dom"],
+    "module": "commonjs",
+    "noEmit": true,
+    "allowJs": true
+  },
+  "include": ["**/*.ts"]
+}
+

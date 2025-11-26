@@ -1,0 +1,203 @@
+<div class="container">
+    @if (order) {
+      <div class="card border-success mb-4">
+        <div class="card-header bg-success text-white">
+          <h3 class="mb-0">¡Pedido Confirmado!</h3>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Gracias por tu compra, {{ order.customerName }}</h5>
+          <p class="card-text">Tu pedido con ID <strong>{{ order.id }}</strong> ha sido registrado correctamente.</p>
+          <p>Recibirás un correo de confirmación a <strong>{{ order.email }}</strong> con los detalles de tu pedido.</p>
+        </div>
+      </div>
+
+      <!-- Boucher/Comprobante -->
+      @if (boucher) {
+        <div class="card mb-4 border-primary boucher-print" id="boucher">
+          <!-- Header del Boucher con Logo y Colores -->
+          <div class="boucher-header">
+            <div class="boucher-logo-container">
+              <img src="assets/LogoYankee.png" alt="Logo" class="boucher-logo">
+            </div>
+            <div class="boucher-title-container">
+              <h2 class="boucher-title">Comprobante de Compra</h2>
+              <p class="boucher-subtitle">Gracias por tu compra</p>
+            </div>
+            <button class="btn btn-light btn-sm print-btn" (click)="printBoucher()">
+              <i class="bi bi-printer me-2"></i>Imprimir
+            </button>
+          </div>
+          <div class="card-body boucher-body">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <h5 class="border-bottom pb-1">Información del Cliente</h5>
+                <p class="mb-1"><strong>Nombre:</strong> {{ boucher.customer?.name || 'N/A' }}</p>
+                <p class="mb-1"><strong>Email:</strong> {{ boucher.customer?.email || 'N/A' }}</p>
+              </div>
+              <div class="col-md-6">
+                <h5 class="border-bottom pb-1">Detalles del Pedido</h5>
+                <p class="mb-1"><strong>Número de Orden:</strong> {{ boucher.orderNumber || 'N/A' }}</p>
+                <p class="mb-1"><strong>Fecha:</strong> {{ boucher.orderDate || 'N/A' }}</p>
+                <p class="mb-1"><strong>Estado:</strong> 
+                  <span class="badge" [ngClass]="{
+                    'bg-warning': boucher.status === 'pending',
+                    'bg-info': boucher.status === 'processing',
+                    'bg-primary': boucher.status === 'shipped',
+                    'bg-success': boucher.status === 'delivered'
+                  }">
+                    {{ boucher.status || 'N/A' }}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <h5 class="border-bottom pb-1">Dirección de Envío</h5>
+              <p class="mb-1">
+                {{ boucher.shipping?.address || 'N/A' }}<br>
+                {{ boucher.shipping?.city || '' }}, {{ boucher.shipping?.state || '' }} {{ boucher.shipping?.postalCode || '' }}<br>
+                {{ boucher.shipping?.country || 'N/A' }}<br>
+                <strong>Teléfono:</strong> {{ boucher.shipping?.phone || 'N/A' }}
+              </p>
+            </div>
+
+            <div class="mb-3">
+              <h5 class="border-bottom pb-1">Productos</h5>
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Producto</th>
+                      <th class="text-center">Cantidad</th>
+                      <th class="text-end">Precio Unitario</th>
+                      <th class="text-end">Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @if (boucher.items && boucher.items.length > 0) {
+                      @for (item of boucher.items; track $index) {
+                        <tr>
+                          <td>{{ item.productName || 'Producto' }}</td>
+                          <td class="text-center">{{ item.quantity || 0 }}</td>
+                          <td class="text-end">${{ (item.unitPrice || 0).toFixed(2) }}</td>
+                          <td class="text-end">${{ (item.subtotal || 0).toFixed(2) }}</td>
+                        </tr>
+                      }
+                    } @else {
+                      <tr>
+                        <td colspan="4" class="text-center">No hay productos en esta orden</td>
+                      </tr>
+                    }
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="3" class="text-end fw-bold">Subtotal:</td>
+                      <td class="text-end fw-bold">${{ (boucher.totals?.subtotal || 0).toFixed(2) }}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" class="text-end fw-bold">Envío:</td>
+                      <td class="text-end fw-bold">${{ (boucher.totals?.shipping || 0).toFixed(2) }}</td>
+                    </tr>
+                    <tr class="table-primary">
+                      <td colspan="3" class="text-end fw-bold fs-5">Total:</td>
+                      <td class="text-end fw-bold fs-5">${{ (boucher.totals?.total || 0).toFixed(2) }}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <h5 class="border-bottom pb-1">Información de Pago</h5>
+              <p class="mb-1"><strong>Método de Pago:</strong> {{ boucher.payment?.method || 'N/A' }}</p>
+              <p class="mb-0"><strong>Estado del Pago:</strong> 
+                <span class="badge" [ngClass]="{
+                  'bg-warning': boucher.payment?.paymentStatus === 'pending',
+                  'bg-success': boucher.payment?.paymentStatus === 'paid',
+                  'bg-danger': boucher.payment?.paymentStatus === 'failed'
+                }">
+                  {{ boucher.payment?.paymentStatus || 'N/A' }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Resumen del Pedido</h4>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <h5>Información de Contacto</h5>
+              <p><strong>Nombre:</strong> {{ order.customerName }}</p>
+              <p><strong>Email:</strong> {{ order.email }}</p>
+              <p><strong>Teléfono:</strong> {{ order.phone }}</p>
+              <p><strong>Dirección:</strong> {{ order.address }}</p>
+            </div>
+            <div class="col-md-6">
+              <h5>Detalles del Pedido</h5>
+              <p><strong>ID del Pedido:</strong> {{ order.id || order._id }}</p>
+              <p><strong>Fecha:</strong> {{ order.date | date:'dd/MM/yyyy HH:mm' }}</p>
+              <p><strong>Total:</strong> ${{ (order.total || 0).toFixed(2) }}</p>
+              <div *ngIf="order.payment">
+                <hr>
+                <h6 class="mb-2">Método de Pago</h6>
+                <p *ngIf="order.payment.method === 'tarjeta'"><strong>Tarjeta de crédito/débito</strong><br>
+                  <span *ngIf="order.payment.cardNumber">Terminación: **** {{ order.payment.cardNumber.slice(-4) }}</span><br>
+                  <span *ngIf="order.payment.cardName">A nombre de: {{ order.payment.cardName }}</span>
+                </p>
+                <p *ngIf="order.payment.method === 'paypal'"><strong>PayPal</strong><br>
+                  <span *ngIf="order.payment.paypalEmail">Correo: {{ order.payment.paypalEmail }}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <h5>Productos</h5>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Precio</th>
+                  <th>Cantidad</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of order.items; track item.product.id) {
+                  <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>${{ (item.product.price || 0).toFixed(2) }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ ((item.product.price || 0) * (item.quantity || 0)).toFixed(2) }}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="text-end fw-bold">Total:</td>
+                  <td class="fw-bold">${{ (order.total || 0).toFixed(2) }}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <a routerLink="/productos" class="btn btn-primary">
+          Continuar Comprando
+        </a>
+      </div>
+    } @else {
+      <div class="alert alert-warning">
+        No hay información de pedido disponible. <a routerLink="/productos">Ir a la tienda
+            
+</a>
+</div>
+}
+</div>

@@ -1,0 +1,28 @@
+/* Padding para separar del header */
+.container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Espaciado adicional para el formulario */
+.card {
+  margin-top: 1rem;
+}
+
+/* Mejorar el espaciado de los campos del formulario */
+.form-control {
+  margin-bottom: 0.5rem;
+}
+
+/* Espaciado para los botones */
+.btn {
+  margin-top: 1rem;
+}
+
+/* Responsive padding */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}

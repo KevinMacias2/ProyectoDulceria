@@ -1,0 +1,85 @@
+<div class="container">
+  <div class="edit-profile-container">
+    <h2>Editar perfil</h2>
+
+  <div *ngIf="successMessage" class="alert alert-success" role="alert">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="displayName">Nombre completo</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="displayName"
+        formControlName="displayName"
+        placeholder="Ingresa tu nombre completo">
+      <div class="text-danger" *ngIf="profileForm.get('displayName')?.invalid && profileForm.get('displayName')?.touched">
+        <span *ngIf="profileForm.get('displayName')?.errors?.['required']">El nombre es obligatorio.</span>
+        <span *ngIf="profileForm.get('displayName')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</span>
+        <span *ngIf="profileForm.get('displayName')?.errors?.['maxlength']">El nombre no puede exceder 50 caracteres.</span>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label for="email">Correo electrónico</label>
+      <input 
+        type="email" 
+        class="form-control" 
+        id="email"
+        formControlName="email"
+        placeholder="tu@email.com">
+      <div class="text-danger" *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+        <span *ngIf="profileForm.get('email')?.errors?.['required']">El correo es obligatorio.</span>
+        <span *ngIf="profileForm.get('email')?.errors?.['email']">Ingresa un correo válido.</span>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label for="phone">Teléfono</label>
+      <input 
+        type="tel" 
+        class="form-control" 
+        id="phone"
+        formControlName="phone" 
+        maxlength="10"
+        placeholder="1234567890">
+      <div class="text-danger" *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched">
+        <span *ngIf="profileForm.get('phone')?.errors?.['required']">El teléfono es obligatorio.</span>
+        <span *ngIf="profileForm.get('phone')?.errors?.['pattern']">El teléfono debe tener exactamente 10 dígitos.</span>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label for="avatar">Imagen de perfil</label>
+      <input 
+        type="file" 
+        class="form-control" 
+        id="avatar"
+        (change)="onFileChange($event)" 
+        accept="image/*">
+      <div class="text-muted small mt-1">Opcional: Selecciona una imagen para tu perfil</div>
+      <div *ngIf="imagenPreview" class="mt-2">
+        <label>Previsualización:</label><br>
+        <img [src]="imagenPreview" alt="Previsualización" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+      </div>
+    </div>
+    
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit" [disabled]="profileForm.invalid || loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        <i *ngIf="!loading" class="bi bi-check-circle me-2"></i>
+        {{ loading ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="loadUserProfile()" [disabled]="loading">
+        <i class="bi bi-arrow-clockwise me-2"></i>Restaurar
+      </button>
+    </div>
+  </form>
+  </div>
+</div>
+
